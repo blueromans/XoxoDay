@@ -1,0 +1,15 @@
+{
+    "query": "plumProAPI.mutation.placeOrder",
+    "tag": "plumProAPI",
+    "variables": {
+      "data":{
+        "productId":"",
+        "quantity": "1",
+        "denomination": "5",
+        "email": "",
+        "contact":"",
+        "tag":"",
+        "poNumber":""
+      }
+    }
+  }

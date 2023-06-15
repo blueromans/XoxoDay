@@ -1,0 +1,17 @@
+{
+  "query": "plumProAPI.mutation.getVouchers",
+  "tag": "plumProAPI",
+  "variables": {
+    "data": {
+      "limit": 10000,
+      "page": 0,
+      "includeProducts": "",
+      "excludeProducts": "",
+      "exchangeRate": 0,
+      "sort": {
+        "field": "",
+        "order": ""
+      }
+    }
+  }
+}

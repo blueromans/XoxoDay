@@ -28,7 +28,7 @@ class XoxoDayService(TokenService):
             raise ValueError(ErrorCodes.CLIENT_SECRET_ERROR)
         api_url = self.API_DEV_URL if self.environment == 'dev' else self.API_PROD_URL
         payload = {
-            "grant_type": kwargs.get('grant_type', 'refresh_token'),
+            "grant_type": kwargs.get('grant_type', 'access_token'),
             "refresh_token": self.refresh_token,
             "client_id": self.client_id,
             "client_secret": self.client_secret

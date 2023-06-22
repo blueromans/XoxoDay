@@ -33,7 +33,7 @@ class XoxoDayService(TokenService):
             "client_id": self.client_id,
             "client_secret": self.client_secret
         }
-        super().__init__(api_url, **payload)
+        super().__init__(api_url, self.access_token, **payload)
         token = self.token_dict['access_token']
         self.headers = {
             'Authorization': f'Bearer {token}',

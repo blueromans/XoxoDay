@@ -35,9 +35,8 @@ class TokenService(HttpService):
             res = self.connect('POST', '/v1/oauth/token/user', payloads, headers)
         except XoxoDayException as e:
             res = self.recreate_access_token(payloads, headers)
-        else:
-            update_token(res)
-            return res
+        update_token(res)
+        return res
 
     def recreate_access_token(self, payloads, headers):
         payload = {"query": "oauth_plum.query.getOauthToken", "tag": "oauth_plum",

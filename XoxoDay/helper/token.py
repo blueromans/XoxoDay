@@ -4,7 +4,7 @@ import sqlite3 as lite
 from XoxoDay.exception import XoxoDayException
 from XoxoDay.serializer import Serializer
 
-sql_path = f'{os.path.dirname(os.path.abspath(__file__))}/logo_rest.sqlite'
+sql_path = f'{os.path.dirname(os.path.abspath(__file__))}/xoxo.sqlite'
 
 
 def get_token():

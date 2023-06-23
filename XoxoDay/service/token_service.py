@@ -1,10 +1,9 @@
 import datetime
-import os
 
-from XoxoDay.helper.sqlite import initialize_sql_lite
+from XoxoDay.exception import XoxoDayException
+from XoxoDay.helper.sqlite import initialize_sql_lite, get_cookie
 from XoxoDay.helper.token import get_token, update_token
 from XoxoDay.service.http_service import HttpService
-from XoxoDay.exception import XoxoDayException, ErrorCodes
 
 
 class TokenService(HttpService):
@@ -26,11 +25,39 @@ class TokenService(HttpService):
             return
         headers['Authorization'] = f'Bearer {self.token_dict["access_token"]}'
         self.token_dict = self.validate_access_token(headers)
-        if datetime.datetime.now() < datetime.datetime.now() + datetime.timedelta(seconds=self.token_dict['expires_in']):
+        if datetime.datetime.now() < datetime.datetime.now() + datetime.timedelta(
+                seconds=self.token_dict['expires_in']):
             return
         self.token_dict = self.retrieve_access_token(payloads, headers)
 
     def retrieve_access_token(self, payloads, headers):
+        try:
+            res = self.connect('POST', '/v1/oauth/token/user', payloads, headers)
+        except XoxoDayException as e:
+            res = self.recreate_access_token(payloads, headers)
+        else:
+            update_token(res)
+            return res
+
+    def recreate_access_token(self, payloads, headers):
+        payload = {"query": "oauth_plum.query.getOauthToken", "tag": "oauth_plum",
+                   "variables": {"scope": "plum_pro_api", "client_id": payloads['client_id']}}
+        headers['Referer'] = "https://stagingstores.xoxoday.com/admin/accounts/platform-preferences"
+        headers['pltfm'] = '4'
+        headers['Cookie'] = get_cookie()
+        res = self.connect('POST', 'https://stagingstores.xoxoday.com/chef/api/graph/oauth_plum/getOauthToken', payload,
+                           headers, is_direct=True)
+        data = res['data']['getOauthToken']
+        result = {
+            "access_token": data['access_token'],
+            "token_type": data['token_type'],
+            "expires_in": data['expires_in'],
+            "refresh_token": data['refresh_token']
+        }
+        update_token(result)
+        return res
+
+    def create_access_token(self, payloads, headers):
         res = self.connect('POST', '/v1/oauth/token/user', payloads, headers)
         if 'error' in res:
             raise XoxoDayException(res['error'] + ' ' + res['error_description'])

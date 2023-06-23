@@ -16,8 +16,8 @@ class HttpService:
     def parse_result(r):
         res = r.text.encode('utf-8')
         res = Serializer.loads(res)
-        if 'errors' in res and 'data' not in res:
-            raise XoxoDayException(res['errors']['message'])
+        if r.status_code != 200:
+            raise XoxoDayException(res['error_description'])
         return res
 
     def post_request(self, url, request_body, headers):
@@ -29,7 +29,7 @@ class HttpService:
         r = requests.get(url, headers=headers)
         return self.parse_result(r)
 
-    def connect(self, method, url, request_body={}, headers=None):
+    def connect(self, method, url, request_body={}, headers=None, is_direct=False):
         if method == 'GET':
-            return self.get_request(self.REST_URL + url, headers)
-        return self.post_request(self.REST_URL + url, request_body, headers)
+            return self.get_request(self.REST_URL + url if is_direct is False else url, headers)
+        return self.post_request(self.REST_URL + url if is_direct is False else url, request_body, headers)

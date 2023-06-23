@@ -1,8 +1,7 @@
 import datetime
 
 from XoxoDay.exception import XoxoDayException
-from XoxoDay.helper.sqlite import initialize_sql_lite, get_cookie
-from XoxoDay.helper.token import get_token, update_token
+from XoxoDay.helper.token import get_token, update_token, get_cookie
 from XoxoDay.service.http_service import HttpService
 
 
@@ -12,7 +11,6 @@ class TokenService(HttpService):
             raise XoxoDayException("Payloads required!")
         super().__init__(REST_URL)
         self.payloads = payloads
-        initialize_sql_lite()
         self.token_dict = get_token()
         headers = {
             'content-type': 'application/json',
@@ -24,9 +22,9 @@ class TokenService(HttpService):
             self.token_dict = self.retrieve_access_token(payloads, headers)
             return
         headers['Authorization'] = f'Bearer {self.token_dict["access_token"]}'
-        self.token_dict = self.validate_access_token(headers)
+        self.token_dict = self.validate_access_token(payloads, headers)
         if datetime.datetime.now() < datetime.datetime.now() + datetime.timedelta(
-                seconds=self.token_dict['expires_in']):
+                seconds=int(self.token_dict['expires_in'])):
             return
         self.token_dict = self.retrieve_access_token(payloads, headers)
 
@@ -54,7 +52,7 @@ class TokenService(HttpService):
             "refresh_token": data['refresh_token']
         }
         update_token(result)
-        return res
+        return result
 
     def create_access_token(self, payloads, headers):
         res = self.connect('POST', '/v1/oauth/token/user', payloads, headers)
@@ -63,9 +61,10 @@ class TokenService(HttpService):
         update_token(res)
         return res
 
-    def validate_access_token(self, headers):
-        res = self.connect('GET', '/v1/oauth/token', headers=headers)
-        if 'error' in res:
-            raise XoxoDayException(res['error'] + ' ' + res['error_description'])
+    def validate_access_token(self, payloads, headers):
+        try:
+            res = self.connect('GET', '/v1/oauth/token', headers=headers)
+        except XoxoDayException as e:
+            res = self.recreate_access_token(payloads, headers)
         update_token(res)
         return res

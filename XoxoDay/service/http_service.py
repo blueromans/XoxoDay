@@ -16,7 +16,7 @@ class HttpService:
     def parse_result(r):
         res = r.text.encode('utf-8')
         res = Serializer.loads(res)
-        if 'errors' in res:
+        if 'errors' in res and 'data' not in res:
             raise XoxoDayException(res['errors']['message'])
         return res
 

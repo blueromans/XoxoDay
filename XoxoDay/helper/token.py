@@ -1,12 +1,11 @@
 import os
-import sys
 
 from XoxoDay.exception import XoxoDayException
 from XoxoDay.serializer import Serializer
 
-file_path = f'{os.path.dirname(os.path.abspath(__file__))}/xoxo'
+ROOT_DIR = os.path.split(os.environ['VIRTUAL_ENV'])[0]
 
-ROOT_DIR = sys.path[1]
+file_path = f'{ROOT_DIR}/xoxo_json'
 
 
 def get_token():
@@ -18,8 +17,6 @@ def get_token():
             file.close()
             return token_dict
     except Exception as e:
-        with open(file_path, 'w') as creating_new_xoxo_file:
-            return
         raise XoxoDayException(e)
 
 

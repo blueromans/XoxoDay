@@ -1,9 +1,10 @@
 import os
+import sys
 
 from XoxoDay.exception import XoxoDayException
 from XoxoDay.serializer import Serializer
 
-ROOT_DIR = os.path.split(os.environ['VIRTUAL_ENV'])[0]
+ROOT_DIR = os.path.split(os.environ['VIRTUAL_ENV'])[0] if 'VIRTUAL_ENV' in os.environ else sys.path[1]
 
 file_path = f'{ROOT_DIR}/xoxo_json'
 

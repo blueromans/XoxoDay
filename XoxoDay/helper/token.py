@@ -26,10 +26,3 @@ def update_token(token):
             file.close()
     except Exception as e:
         raise XoxoDayException(e)
-
-
-def get_cookie():
-    f = open(f'{ROOT_DIR}/xoxo_cookie', "r")
-    cookie = f.read()
-    f.close()
-    return cookie

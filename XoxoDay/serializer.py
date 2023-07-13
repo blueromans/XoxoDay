@@ -19,3 +19,10 @@ class Serializer(object):
             return json.loads(data_string)
         except:
             return None
+
+    @staticmethod
+    def load(file):
+        try:
+            return json.load(file)
+        except:
+            return None

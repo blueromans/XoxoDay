@@ -12,9 +12,7 @@ file_path = f'{ROOT_DIR}/xoxo_json'
 def get_token():
     try:
         with open(file_path, "r") as file:
-            token_dict = file.read()
-            if token_dict is not None:
-                token_dict = Serializer.loads(token_dict[0])
+            token_dict = Serializer.load(file)
             file.close()
             return token_dict
     except Exception as e:

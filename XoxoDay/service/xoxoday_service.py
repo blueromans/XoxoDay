@@ -43,7 +43,7 @@ class XoxoDayService(TokenService):
 
     @staticmethod
     def handleVoucher(item):
-        return dict(id=item['productId'], name=item['name'], denominations=item['valueDenominations'])
+        return dict(id=item['productId'], name=item['name'], denominations=item['valueDenominations'], categories=item['categories'])
 
     @staticmethod
     def handleOrder(item):

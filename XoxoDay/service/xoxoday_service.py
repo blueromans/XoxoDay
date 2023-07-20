@@ -81,7 +81,7 @@ class XoxoDayService(TokenService):
             raise XoxoDayException(ErrorCodes.INVALID_ATTRIBUTE)
         denominations = product[0]['denominations'].split(',')
         denominations = list(map(int, denominations))
-        if int(denomination) not in denominations:
+        if int(denomination) not in denominations and self.environment == 'dev':
             raise XoxoDayException(ErrorCodes.INVALID_DENOMINATION)
         if poNumber is None:
             poNumber = str(uuid.uuid4())

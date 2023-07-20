@@ -10,6 +10,7 @@ class XoxoDayService(TokenService):
     API_DEV_URL = 'https://stagingaccount.xoxoday.com/chef'
     API_PROD_URL = 'https://accounts.xoxoday.com/chef'
 
+    
     def __init__(self, **kwargs):
         self.environment = os.environ.get('XOXODAY_ENV', kwargs.get('environment', 'dev'))
         if self.environment is None:

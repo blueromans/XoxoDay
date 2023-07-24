@@ -79,10 +79,6 @@ class XoxoDayService(TokenService):
         product = self.getVouchers(includeProducts=productId)
         if len(product) == 0:
             raise XoxoDayException(ErrorCodes.INVALID_ATTRIBUTE)
-        denominations = product[0]['denominations'].split(',')
-        denominations = list(map(int, denominations))
-        if int(denomination) not in denominations and self.environment == 'dev':
-            raise XoxoDayException(ErrorCodes.INVALID_DENOMINATION)
         if poNumber is None:
             poNumber = str(uuid.uuid4())
         payload['variables']['data']['productId'] = productId

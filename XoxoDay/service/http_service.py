@@ -17,7 +17,7 @@ class HttpService:
         res = r.text.encode('utf-8')
         res = Serializer.loads(res)
         if r.status_code != 200:
-            raise XoxoDayException(res['error_description'])
+            raise XoxoDayException(res['error_description'] if "error_description" in res else res['errorInfo'])
         return res
 
     def post_request(self, url, request_body, headers):
